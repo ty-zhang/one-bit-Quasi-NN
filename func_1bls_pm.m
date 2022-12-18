@@ -32,7 +32,7 @@ out.noise_var = out_pm.noise_var;
 out.loss = loss;
 end
 
-%% merge function
+% merge function
 function out = node_merge_1b(ini, N, err_rate)
 a = ini.amp;
 w = ini.freq;
@@ -107,7 +107,7 @@ end
 a = a(order);
 end
 
-%% prune function
+% prune function
 function out = node_prune_1b(ini, N, err_rate)
 a = ini.amp;
 w = ini.freq;

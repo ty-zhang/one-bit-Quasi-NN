@@ -37,7 +37,7 @@ out.noise_var = nu;
 out.loss = loss; % loss curve
 end
 
-%% cost function
+% cost function
 function L = func_cost(x, z, h, n, K)
 F       = @(x) - log(erfc(-x./sqrt(2))/2);
 base    = @(w) exp(1j*n*w.');
@@ -58,7 +58,7 @@ I = zI.*(imag(y) - lambda*hI);
 L = sum(F(R)) + sum(F(I));
 end
 
-%% gradient function
+% gradient function
 function G = func_grad(x, z, h, n, K)
 gF      = @(x) - sqrt(2/pi)./erfcx(-x./sqrt(2));
 base    = @(w) exp(1j*n*w.');
