@@ -1,21 +1,14 @@
 function out = func_1bls_pm(z, h, ini, cg_method, tol)
-% train Quasi-NN using CG method with merge and prune
-% z -- one-bit signal
-% h -- known threshold
-% ini -- initial value
-% cg_method -- choose CG update parameter
-% tol -- network training parameters
-
-ispm        = 1; % do merging and pruning or Not
+ispm        = 1;
 loss        = [];
 N           = length(z);
 
 while ispm 
-    out_in = func_1bls_cg(z, h, ini, cg_method, tol.maxiter);
+    out_in = func_1bls_cg(z, h, ini, cg_method);
     loss = [loss, out_in.loss];
-
-    out_pm = node_merge_1b(out_in, N, tol.merge); % merge nodes
-    out_pm = node_prune_1b(out_pm, N, tol.prune); % prune nodes
+    % merge nodes
+    out_pm = node_merge_1b(out_in, N, tol.merge);
+    out_pm = node_prune_1b(out_pm, N, tol.prune);
 
     if isempty(out_pm.freq)
         break;
@@ -32,7 +25,7 @@ out.noise_var = out_pm.noise_var;
 out.loss = loss;
 end
 
-% merge function
+%% merge function
 function out = node_merge_1b(ini, N, err_rate)
 a = ini.amp;
 w = ini.freq;
@@ -91,6 +84,7 @@ for ii = 1:M
 end
 [~, idx] = min(tmp);
 tmp = tmp(idx);
+% lambda = lambda(idx);
 
 if tmp <= criterion
     ismerge = 1;
@@ -101,13 +95,13 @@ if tmp <= criterion
     w = [wAvg(idx); w(1:idx-1); w(idx+2:end)];
     a = [aAvg(idx); a(1:idx-1); a(idx+2:end)];
     end
-    nu = nu + norm(xEst - base(w.')*a)^2/N; % update noise variance
+    nu = nu + norm(xEst - base(w.')*a)^2/N;
 end
 [w, order] = sort(w, 'ascend');
 a = a(order);
 end
 
-% prune function
+%% prune function
 function out = node_prune_1b(ini, N, err_rate)
 a = ini.amp;
 w = ini.freq;
@@ -150,8 +144,8 @@ end
 [~, idx] = min(tmp);
 tmp = tmp(idx);
 
-if tmp <= criterion 
-	nu = nu + abs(a(idx))^2; % update noise variance
+if tmp <= criterion
+	nu = nu + abs(a(idx))^2;
     a = a([1:idx-1, idx+1:end]);
     w = w([1:idx-1, idx+1:end]);
     isprune = 1;

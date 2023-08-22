@@ -1,10 +1,7 @@
 function [x, loss] = func_conjugate_gradient(func, gradient, x0, update_method, maxiter)
-% nonlinear conjugate gradient method
 % func  -- cost function
 % gradient -- gradient function
 % x0 -- initial value
-% update_method -- method of calculating CG update parameter
-% maxiter -- max iteration times
 
 if nargin == 4
     maxiter     = 1e3; % max iteration times
